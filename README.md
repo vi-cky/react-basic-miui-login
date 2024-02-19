@@ -1,2 +1,2 @@
-# lmsui
-LMS UI Code
+# LMSUI
+LMS Project
