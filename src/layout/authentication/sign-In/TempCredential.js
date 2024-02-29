@@ -1,8 +1,6 @@
 export const TempCredential = [
-    {
-      sCode: "LMS",
-      sEmail: "admin@gmail.com",
-      sPassword: "admin",
-    },
-  ];
-  
+  {
+    sEmail: "admin@gmail.com",
+    sPassword: "User@123",
+  },
+];

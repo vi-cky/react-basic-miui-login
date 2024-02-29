@@ -1,5 +1,5 @@
-import { Button, Form } from "antd";
 import React from "react";
+import { Button } from "@mui/material";
 
 export const SimpleButton = (props) => {
   const {
@@ -10,7 +10,6 @@ export const SimpleButton = (props) => {
     classNames,
     danger,
     disabled,
-    ghost,
     href,
     icon,
     loading,
@@ -22,27 +21,29 @@ export const SimpleButton = (props) => {
     htmlType,
     styles,
   } = props;
+
   return (
     <div>
       <Button
         id={id}
         name={name}
-        block={block}
-        type={type}
+        fullWidth={block} // Equivalent to Material-UI's fullWidth prop
+        variant={type === "primary" ? "contained" : "outlined"} // Equivalent to Material-UI's variant prop
         className={classNames}
-        danger={danger}
+        color={danger ? "error" : "default"} // Equivalent to Material-UI's color prop
         disabled={disabled}
-        ghost={ghost}
         href={href}
-        htmlType={htmlType}
-        icon={icon}
-        loading={loading}
-        shape={shape}
-        size={size}
-        styles={styles}
+        startIcon={icon && React.cloneElement(icon, { fontSize: "inherit" })} // Equivalent to Material-UI's startIcon prop
+        loading={loading} // No direct equivalent in Material-UI; consider using CircularProgress in combination with Button
+        size={size} // Equivalent to Material-UI's size prop
+        shape={shape === "round" ? "rounded" : undefined} // No direct equivalent; Material-UI's shape is limited to 'rounded', 'circular', or undefined
+        style={styles}
         target={target}
         onClick={onClick}
-      >{label}</Button>
+        type={htmlType}
+      >
+        {label}
+      </Button>
     </div>
   );
 };

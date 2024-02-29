@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Form, Input } from "antd";
+import { TextField, FormControl, InputAdornment } from "@mui/material";
 
 export const SimpleInput = ({
   name,
@@ -27,11 +27,11 @@ export const SimpleInput = ({
   rulesBit,
   id,
   style,
-  inputStyle, // new prop for styling specifically Input(<Input>).
-  min, // this is for minimum number value
+  inputStyle,
+  min,
   restrictSpace,
   className,
-  removeRequiredLabel, // Remove required label
+  removeRequiredLabel,
   isUppercase,
   restrictRegex,
   isCopyPaste,
@@ -43,8 +43,8 @@ export const SimpleInput = ({
   removeRequiredLabel = removeRequiredLabel ? removeRequiredLabel : false;
   min = min ? min : 1;
   type = type === "numeric" ? "number" : type;
-  tooltip = tooltip ? tooltip : false; // "This is a required field" : tooltip;
-  size = size === undefined ? "middle" : size;
+  tooltip = tooltip ? tooltip : false;
+  size = size === undefined ? "medium" : size;
   disabled = disabled ? disabled : false;
   label = label ? label : "";
   validationOn = validationOn ? validationOn : label;
@@ -56,14 +56,11 @@ export const SimpleInput = ({
   restrictRegex = restrictRegex ? restrictRegex : false;
   className = className ? className : "w-100";
   var invalidChars = ["-", "+", "e"];
-  //STATE
 
   const [val, setVal] = useState(defaultValue);
-  const [bool, setBool] = useState();
-
-  const [firstTimeOnBlue, setFirstTimeOnBlue] = useState("onBlur");
 
   const handleDecimal = (evt, caller) => {
+    // Handling decimal logic remains mostly unchanged
     if (evt.target.value.length >= maxLength) {
       if (
         !evt.key.match("Backspace") &&
@@ -115,6 +112,7 @@ export const SimpleInput = ({
   };
 
   const handleRegex = (evt, value) => {
+    // Handling regex logic remains mostly unchanged
     if (restrictRegex) {
       if (evt.key.match(restrictRegex)) {
         evt.preventDefault();
@@ -142,7 +140,9 @@ export const SimpleInput = ({
       setVal(values);
     }
   };
+
   const handleInputChange = (evt) => {
+    // Handling input change logic remains mostly unchanged
     if (type === "number" || type === "int") {
       setVal(evt.target.value);
     }
@@ -152,7 +152,9 @@ export const SimpleInput = ({
       }
     }
   };
+
   const rules = () => {
+    // Rules function remains mostly unchanged
     let rulesArray = [];
     if (customMessageRule) {
       rulesArray.push(customMessageRule);
@@ -210,59 +212,60 @@ export const SimpleInput = ({
     }
     return rulesArray;
   };
+
   return (
     <div>
-      <Form.Item
-        name={name}
-        label={label}
-        required={required}
-        validateTrigger={firstTimeOnBlue}
-        rules={rules()}
-        initialValue={defaultValue}
-        tooltip={tooltip}
-        style={style}
-        autocomplete="off"
-      >
-        <Input
+      <FormControl fullWidth>
+        <TextField
           id={id}
-          min={min}
-          prefix={prefix}
-          type={type !== "number" ? type : bool ? type : ""}
-          data-name={Array.isArray(name) && name.length > 1 ? name[1] : name}
-          defaultValue={defaultValue ? defaultValue : ""}
-          addonBefore={addOnBeforeValue ? addOnBeforeValue : null}
-          addonAfter={addonAfter ? addonAfter : null}
-          placeholder={placeholder}
-          className={className}
-          size="default"
-          onKeyDown={(e, value) => {
-            handleDecimal(e, "onKeyPress");
-            handleRegex(e, "onKeyPress");
-          }}
+          label={label}
+          required={required}
+          error={form?.getFieldError(name)?.length > 0}
+          helperText={form?.getFieldError(name)?.join(" ")}
+          variant="outlined"
+          size={size}
+          value={val}
           onChange={(e) => {
             if (onSimpleChange) onSimpleChange(e);
             handleInputChange(e);
           }}
-          onKeyPress={(e) => {
-            handleDecimal(e);
-            handleRegex(e);
-          }}
-          onPaste={(e) => {
-            if (isCopyPaste) {
-              e.preventDefault();
-              return false;
-            }
-          }}
           onBlur={() => setFirstTimeOnBlue("onChange")}
           disabled={disabled}
-          minLength={minLength}
-          maxLength={maxLength}
-          autoFocus={Focus}
-          tabIndex={tabIndex}
-          autoComplete="nope"
-          style={inputStyle}
+          inputProps={{
+            min,
+            type: type !== "number" ? type : bool ? type : "",
+            "data-name":
+              Array.isArray(name) && name.length > 1 ? name[1] : name,
+            onKeyDown: (e) => {
+              handleDecimal(e, "onKeyPress");
+              handleRegex(e, "onKeyPress");
+            },
+            onKeyPress: (e) => {
+              handleDecimal(e);
+              handleRegex(e);
+            },
+            onPaste: (e) => {
+              if (isCopyPaste) {
+                e.preventDefault();
+                return false;
+              }
+            },
+            style: inputStyle,
+          }}
+          InputProps={{
+            startAdornment: addOnBeforeValue && (
+              <InputAdornment position="start">
+                {addOnBeforeValue}
+              </InputAdornment>
+            ),
+            endAdornment: addonAfter && (
+              <InputAdornment position="end">{addonAfter}</InputAdornment>
+            ),
+            placeholder,
+            className,
+          }}
         />
-      </Form.Item>
+      </FormControl>
     </div>
   );
 };

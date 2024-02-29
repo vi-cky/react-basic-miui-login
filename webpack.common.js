@@ -38,8 +38,7 @@ module.exports = {
       },
       {
         test: /\.(sa|sc)ss$/,
-        include: [
-        ],
+        include: [],
         use: [
           { loader: "style-loader" },
           { loader: "css-loader" },
@@ -50,10 +49,7 @@ module.exports = {
         test: /\.css$/i,
         include: [
           path.resolve(__dirname, "public", "css"),
-          // path.resolve(__dirname, "src", "Assets"),
-          // path.resolve(__dirname, "src", "LMS", "Style"),
-          // path.resolve(__dirname, "src", "LMS", "Layout"),
-          path.resolve(__dirname, "node_modules", "antd", "dist"),
+          path.resolve(__dirname, "node_modules", "mui", "styled-engine"),
         ],
         use: [MiniCssExtractPlugin.loader, "css-loader"],
       },
