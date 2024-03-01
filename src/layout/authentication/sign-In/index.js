@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import {
   Button,
   FormControl,
@@ -8,14 +8,11 @@ import {
   useTheme,
   useMediaQuery,
 } from "@mui/material";
-import {
-  LockOutlined,
-  MailOutlined,
-  AccountCircleOutlined,
-} from "@mui/icons-material";
-import { TempCredential } from "./TempCredential";
+import { LockOutlined, MailOutlined } from "@mui/icons-material";
+
 import { useNavigate } from "react-router-dom";
 
+import xhrClient from "../../../utilities/DataRequest";
 export default function SignIn() {
   const [values, setValues] = useState({
     email: "",
@@ -26,20 +23,35 @@ export default function SignIn() {
   const isSmScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const navigate = useNavigate();
 
-  const onFinish = (e) => {
+  const onFinish = async (e) => {
     e.preventDefault();
-    console.log("Received values of form: ", values);
+
     const { email, password } = values;
-    console.log("object", email, password);
-    if (
-      email === TempCredential[0].sEmail &&
-      password === TempCredential[0].sPassword
-    ) {
-      localStorage.setItem("token", JSON.stringify(values));
-      console.log("Successfully login");
-      navigate("/home");
-    } else {
-      // alert("Invalid Credentials!!");
+
+    const response = await xhrClient
+      .post("signin", null, { email, password })
+      .then((res) => {
+        return res.data;
+      });
+
+    try {
+      if (response.statusCode === 200) {
+        localStorage.setItem(
+          "token",
+          JSON.stringify(response.response.token.accessToken)
+        );
+        localStorage.setItem(
+          "refreshTOken",
+          JSON.stringify(response.response.token.refreshToken)
+        );
+
+        navigate("/home");
+      } else {
+        alert(response.response);
+      }
+      console.log("responseObject", responseObject);
+    } catch (error) {
+      console.error("Error parsing JSON:", error);
     }
   };
 

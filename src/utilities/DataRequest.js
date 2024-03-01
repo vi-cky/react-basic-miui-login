@@ -44,6 +44,7 @@ const xhrClient = {
     responseType = "json",
     params = {}
   ) {
+    console.log("route", route);
     return await this.requestBase(
       route,
       "get",
@@ -61,6 +62,10 @@ const xhrClient = {
     params = {},
     requestConfig = null
   ) {
+    console.log("route", route);
+
+    console.log("customReqHeader", customReqHeader);
+    console.log("data", data);
     return this.requestBase(
       route,
       "post",

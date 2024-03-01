@@ -11,7 +11,7 @@ import MissingRoute from "./MissingRoute";
 
 const RouteComponent = (match) => {
   const location = useLocation();
-  console.log("location", location);
+
   if (location && location.pathname === "/") {
     return <Navigate to="/signin" />;
   }
